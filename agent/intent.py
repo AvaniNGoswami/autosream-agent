@@ -35,41 +35,24 @@ User: {message}
 Return ONLY valid JSON:
 {{ "intent": "greeting | product_query | high_intent" }}
 """
-
-    # ---------------------------
-    # TRY GEMINI
-    # ---------------------------
     try:
         response = gemini_model.generate_content(prompt)
         content = response.text.strip()
-
-        # 🧠 CLEAN JSON (important)
         content = content.replace("```json", "").replace("```", "").strip()
 
         return json.loads(content)["intent"]
 
     except Exception as e:
-        print("Gemini failed, switching to Groq...")
-
-    # ---------------------------
-    # FALLBACK GROQ
-    # ---------------------------
-    try:
         response = groq_client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}]
         )
 
         content = response.choices[0].message.content.strip()
 
-        # clean again
         content = content.replace("```json", "").replace("```", "").strip()
 
         return json.loads(content)["intent"]
-    
-    except Exception as e:
-        print(f"Groq failed: {e}")
-        return "product_query"
 
 
 def detect_intent(message: str):

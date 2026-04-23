@@ -64,8 +64,6 @@ User Question:
         return response.text
 
     except Exception as e:
-        print("Gemini failed, switching to Groq...")
-
         response = groq_client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}]

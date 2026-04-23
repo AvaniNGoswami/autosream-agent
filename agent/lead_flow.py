@@ -7,7 +7,6 @@ def handle_lead_flow(state, user_message):
         state["awaiting"] = "name"
         return "Great! Let's get you started. What's your name?"
 
-    # ---------------------------
     if state.get("awaiting") == "name":
         update_lead(state, "name", user_message)
         state["awaiting"] = "email"
