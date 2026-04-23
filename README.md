@@ -44,6 +44,44 @@ The RAG pipeline uses FAISS with sentence embeddings to retrieve relevant produc
 
 Overall, this architecture ensures scalability, modularity, and production-like behavior suitable for real-world AI agent deployment.
 
+### API Configuration & LLM Strategy
+
+This project uses a multi-LLM fallback strategy to ensure reliability and uptime.
+
+## LLM Providers Used
+
+1. **Google Gemini (Primary LLM)**
+   - Model: gemini-2.0-flash
+   - Used for intent detection and RAG-based responses
+   - Preferred due to speed and structured outputs
+
+2. **Groq (Fallback LLM)**
+   - Model: llama3-8b-8192
+   - Used when Gemini rate limits or API failures occur
+   - Ensures system reliability during quota exhaustion
+
+---
+
+## Fallback Strategy
+
+The system follows this flow:
+
+Gemini API → If success → return response  
+Gemini API → If failure → fallback to Groq API  
+
+This ensures:
+- High availability
+- No downtime during quota limits
+- Continuous agent functionality
+
+---
+
+## Security Practice
+
+- API keys are stored in environment variables (.env file)
+- No API keys are hardcoded in the codebase
+- .env is excluded from version control using .gitignore
+
 ## WhatsApp Deployment (Webhook Integration)
 
 To integrate this agent with WhatsApp, we would use the WhatsApp Business API (or Meta Cloud API) with a webhook-based architecture.
